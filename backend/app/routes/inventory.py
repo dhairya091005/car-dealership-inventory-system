@@ -6,21 +6,15 @@ Inventory router — purchase and restock endpoints.
 """
 
 from fastapi import APIRouter, Depends, HTTPException, status
-from pydantic import BaseModel, Field
 from sqlalchemy.orm import Session
 
 from app.auth.dependencies import get_current_user, require_admin
 from app.database.dependencies import get_db
 from app.models.user import User
 from app.models.vehicle import Vehicle
-from app.schemas.vehicle import VehicleResponse
+from app.schemas.vehicle import RestockRequest, VehicleResponse
 
 router = APIRouter(prefix="/api/vehicles", tags=["Inventory"])
-
-
-class RestockRequest(BaseModel):
-    """Request body for the restock endpoint."""
-    quantity: int = Field(gt=0, description="Number of units to add (must be > 0)")
 
 
 @router.post("/{vehicle_id}/purchase", response_model=VehicleResponse)

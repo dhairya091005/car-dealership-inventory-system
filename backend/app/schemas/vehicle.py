@@ -1,6 +1,6 @@
 """Vehicle Pydantic schemas for request validation and response serialization."""
 
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, ConfigDict, Field
 
 
 class VehicleCreate(BaseModel):
@@ -30,5 +30,9 @@ class VehicleResponse(BaseModel):
     price: float
     quantity: int
 
-    class Config:
-        from_attributes = True
+    model_config = ConfigDict(from_attributes=True)
+
+
+class RestockRequest(BaseModel):
+    """Request body for the restock endpoint."""
+    quantity: int = Field(gt=0, description="Number of units to add (must be > 0)")
