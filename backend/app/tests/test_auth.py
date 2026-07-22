@@ -1,11 +1,5 @@
-from fastapi.testclient import TestClient
-from app.main import app
-
-client = TestClient(app)
-
-
-def test_register_user():
-    response = client.post(
+def test_duplicate_email():
+    client.post(
         "/api/auth/register",
         json={
             "username": "john",
@@ -14,4 +8,13 @@ def test_register_user():
         }
     )
 
-    assert response.status_code == 201
+    response = client.post(
+        "/api/auth/register",
+        json={
+            "username": "john2",
+            "email": "john@example.com",
+            "password": "password123"
+        }
+    )
+
+    assert response.status_code == 400
