@@ -3,6 +3,7 @@ from fastapi import FastAPI
 from app.database.database import Base, engine
 from app.routes.auth import router as auth_router
 from app.routes.vehicles import router as vehicles_router
+from app.routes.inventory import router as inventory_router
 
 # Import all models so SQLAlchemy registers them before create_all
 import app.models.user   # noqa: F401
@@ -20,3 +21,4 @@ def root():
 
 app.include_router(auth_router)
 app.include_router(vehicles_router)
+app.include_router(inventory_router)
