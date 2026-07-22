@@ -1,10 +1,12 @@
 from fastapi import FastAPI
-from app.database.database import engine
+from app.database.database import Base, engine
+
+import app.models
+
+Base.metadata.create_all(bind=engine)
 
 app = FastAPI()
 
 @app.get("/")
-def home():
-    connection = engine.connect()
-    connection.close()
-    return {"message": "Database Connected Successfully"}
+def root():
+    return {"message": "API Running"}
