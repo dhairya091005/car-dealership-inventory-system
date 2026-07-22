@@ -1,13 +1,12 @@
 """
 conftest.py — Test configuration and fixtures.
 
-Overrides the database dependency to use an isolated SQLite in-memory database
+Overrides the database dependency to use an isolated SQLite database
 for tests, so tests never touch the real PostgreSQL database and can run
 independently of each other.
 """
 
 import pytest
-from fastapi.testclient import TestClient
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 
@@ -15,7 +14,7 @@ from app.database.database import Base
 from app.database.dependencies import get_db
 from app.main import app
 
-# ── In-memory SQLite engine for tests ────────────────────────────────────────
+# ── SQLite test engine ────────────────────────────────────────────────────────
 TEST_DATABASE_URL = "sqlite:///./test.db"
 
 test_engine = create_engine(
@@ -51,3 +50,14 @@ def override_get_db(setup_test_db):
     app.dependency_overrides[get_db] = _get_test_db
     yield
     app.dependency_overrides.clear()
+
+
+@pytest.fixture
+def db_session(setup_test_db):
+    """Yield a raw SQLAlchemy session for direct DB manipulation in tests."""
+    db = TestingSessionLocal()
+    try:
+        yield db
+    finally:
+        db.close()
+
