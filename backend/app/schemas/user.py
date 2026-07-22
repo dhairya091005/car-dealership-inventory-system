@@ -4,3 +4,6 @@ class UserRegister(BaseModel):
     username: str
     email: EmailStr
     password: str
+
+
+UserCreate = UserRegister
