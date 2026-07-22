@@ -50,3 +50,5 @@ def register(
         "username": new_user.username,
         "email": new_user.email
     }
+
+    

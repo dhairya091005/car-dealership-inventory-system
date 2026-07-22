@@ -37,3 +37,25 @@ def test_duplicate_email():
     )
 
     assert response.status_code == 400
+
+def test_login_user():
+    # Register user first
+    client.post(
+        "/api/auth/register",
+        json={
+            "username": "alice",
+            "email": "alice@example.com",
+            "password": "password123"
+        }
+    )
+
+    # Try logging in
+    response = client.post(
+        "/api/auth/login",
+        json={
+            "email": "alice@example.com",
+            "password": "password123"
+        }
+    )
+
+    assert response.status_code == 200
