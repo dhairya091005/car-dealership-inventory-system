@@ -12,16 +12,10 @@ import app.models.vehicle  # noqa: F401
 
 Base.metadata.create_all(bind=engine)
 
-app = FastAPI(title="Car Dealership Inventory API", version="1.0.0")
+from contextlib import asynccontextmanager
 
-
-@app.get("/")
-def root():
-    return {"message": "Car Dealership Inventory API is running"}
-
-
-@app.on_event("startup")
-def seed_first_admin():
+@asynccontextmanager
+async def lifespan(app: FastAPI):
     """
     On startup, check if FIRST_ADMIN_EMAIL is set in the environment.
     If so, promote that user to ADMIN if they exist.
@@ -33,18 +27,25 @@ def seed_first_admin():
     from app.models.user import User
 
     first_admin_email = os.getenv("FIRST_ADMIN_EMAIL")
-    if not first_admin_email:
-        return
+    if first_admin_email:
+        db: Session = SessionLocal()
+        try:
+            user = db.query(User).filter(User.email == first_admin_email).first()
+            if user and user.role != "ADMIN":
+                user.role = "ADMIN"
+                db.commit()
+                print(f"[startup] Promoted {first_admin_email} to ADMIN.")
+        finally:
+            db.close()
+    
+    yield
 
-    db: Session = SessionLocal()
-    try:
-        user = db.query(User).filter(User.email == first_admin_email).first()
-        if user and user.role != "ADMIN":
-            user.role = "ADMIN"
-            db.commit()
-            print(f"[startup] Promoted {first_admin_email} to ADMIN.")
-    finally:
-        db.close()
+app = FastAPI(title="Car Dealership Inventory API", version="1.0.0", lifespan=lifespan)
+
+@app.get("/")
+def root():
+    return {"message": "Car Dealership Inventory API is running"}
+
 
 
 app.include_router(auth_router)
