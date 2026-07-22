@@ -5,6 +5,8 @@ import LoginPage from './pages/LoginPage'
 import RegisterPage from './pages/RegisterPage'
 import DashboardPage from './pages/DashboardPage'
 
+import AdminUsersPage from './pages/AdminUsersPage'
+
 export default function App() {
   return (
     <AuthProvider>
@@ -21,8 +23,17 @@ export default function App() {
               </ProtectedRoute>
             }
           />
+          <Route
+            path="/admin/users"
+            element={
+              <ProtectedRoute>
+                <AdminUsersPage />
+              </ProtectedRoute>
+            }
+          />
         </Routes>
       </BrowserRouter>
     </AuthProvider>
   )
 }
+

@@ -23,3 +23,8 @@ export const deleteVehicle  = (id)       => api.delete(`/vehicles/${id}`)
 // ── Inventory ─────────────────────────────────────────────────────────────────
 export const purchaseVehicle = (id)              => api.post(`/vehicles/${id}/purchase`)
 export const restockVehicle  = (id, quantity)    => api.post(`/vehicles/${id}/restock`, { quantity })
+
+// ── Admin ─────────────────────────────────────────────────────────────────────
+export const promoteUser = (email) => api.post('/admin/promote-user', { email })
+export const getUsers    = ()      => api.get('/admin/users')
+

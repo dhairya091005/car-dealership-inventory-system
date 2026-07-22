@@ -1,5 +1,6 @@
 import { useState, useEffect, useCallback } from 'react'
 import { Plus, Search, LogOut, Car, Shield, RefreshCw } from 'lucide-react'
+import { Link } from 'react-router-dom'
 import { getVehicles, searchVehicles } from '../api'
 import { useAuth } from '../context/AuthContext'
 import VehicleCard from '../components/VehicleCard'
@@ -82,9 +83,9 @@ export default function DashboardPage() {
           <div className="flex items-center gap-4">
             <div className="flex items-center gap-2 text-sm text-slate-400">
               {isAdmin && (
-                <span className="badge bg-amber-950 text-amber-300 border border-amber-800 flex items-center gap-1">
-                  <Shield className="w-3 h-3" /> Admin
-                </span>
+                <Link to="/admin/users" className="badge bg-amber-950 text-amber-300 border border-amber-800 hover:bg-amber-900 transition-colors flex items-center gap-1 cursor-pointer">
+                  <Shield className="w-3 h-3" /> Admin Panel
+                </Link>
               )}
               <span>{user?.username}</span>
             </div>
